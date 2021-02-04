@@ -6,163 +6,163 @@
 /*   By: mhumfrey <mhumfrey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/25 17:43:29 by mhumfrey          #+#    #+#             */
-/*   Updated: 2021/01/31 22:35:38 by mhumfrey         ###   ########.fr       */
+/*   Updated: 2021/02/04 21:04:42 by mhumfrey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stdio.h>
 #include "cube3d.h"
 
-void	struct_init(t_a *a)
+void	struct_init(t_structures *structures)
 {
-	a->m.n = NULL;
-	a->m.s = NULL;
-	a->m.w = NULL;
-	a->m.e = NULL;
-	a->m.sp = NULL;
-	a->m.f = 0;
-	a->m.c = 0;
-	a->f.fR = 0;
-	a->f.fF = 0;
-	a->f.fC = 0;
-	a->r.movespeed = 0.1;
-	a->r.rotspeed = 0.02;
-	a->move.moveflag1 = 0;
-	a->move.moveflag2 = 0;
-	a->move.moveflag3 = 0;
-	a->move.moveflag4 = 0;
-	a->move.moveflag5 = 0;
-	a->move.moveflag6 = 0;
+	structures->map.north = NULL;
+	structures->map.south = NULL;
+	structures->map.west = NULL;
+	structures->map.east = NULL;
+	structures->map.sprite = NULL;
+	structures->map.floor = 0;
+	structures->map.ceiling = 0;
+	structures->flag.flag_resolution = 0;
+	structures->flag.flag_floor = 0;
+	structures->flag.flag_ceiling = 0;
+	structures->raycast.movespeed = 0.1;
+	structures->raycast.rotspeed = 0.1;
+	structures->move_flag.move_forward = 0;
+	structures->move_flag.move_back = 0;
+	structures->move_flag.move_left = 0;
+	structures->move_flag.move_right = 0;
+	structures->move_flag.rotate_left = 0;
+	structures->move_flag.rotate_right = 0;
 }
 
 //KEEEEEEEEEEEEEEEEEYYYYYYYYYYYYSSSSSSSSSSS
 
-void	key_w(t_a *a)
+void	forward(t_structures *structures)
 {
-	if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x + a->pl.dir_x * a->r.movespeed)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x + a->pl.dir_x * a->r.movespeed)] != '1')
-			a->pl.pos_x += a->pl.dir_x * a->r.movespeed;
-	if (a->m.map[(int)(a->pl.pos_y + a->pl.dir_y * a->r.movespeed)][(int)(a->pl.pos_x)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y + a->pl.dir_y * a->r.movespeed)][(int)(a->pl.pos_x)] != '1')
-			a->pl.pos_y += a->pl.dir_y * a->r.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x + structures->player.dir_x * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x + structures->player.dir_x * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '1')
+			structures->player.pos_x += structures->player.dir_x * structures->raycast.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y + structures->player.dir_y * structures->raycast.movespeed)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y + structures->player.dir_y * structures->raycast.movespeed)] != '1')
+			structures->player.pos_y += structures->player.dir_y * structures->raycast.movespeed;
 }
 
-void	key_s(t_a *a)
+void	back(t_structures *structures)
 {
-	if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x - a->pl.dir_x * a->r.movespeed)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x - a->pl.dir_x * a->r.movespeed)] != '1')
-			a->pl.pos_x -= a->pl.dir_x * a->r.movespeed;
-	if (a->m.map[(int)(a->pl.pos_y - a->pl.dir_y * a->r.movespeed)][(int)(a->pl.pos_x)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y - a->pl.dir_y * a->r.movespeed)][(int)(a->pl.pos_x)] != '1')
-			a->pl.pos_y -= a->pl.dir_y * a->r.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x - structures->player.dir_x * structures->raycast.movespeed)] [(int)(structures->player.pos_y)]!= '2')
+		if (structures->map.map[(int)(structures->player.pos_x - structures->player.dir_x * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '1')
+			structures->player.pos_x -= structures->player.dir_x * structures->raycast.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y - structures->player.dir_y * structures->raycast.movespeed)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y - structures->player.dir_y * structures->raycast.movespeed)] != '1')
+			structures->player.pos_y -= structures->player.dir_y * structures->raycast.movespeed;
 }
 
-void	key_d(t_a *a)
+void	left(t_structures *structures)
 {
-	if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x - a->pl.dir_y * a->r.movespeed)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x - a->pl.dir_y * a->r.movespeed)] != '1')
-			a->pl.pos_x -= a->pl.dir_y * a->r.movespeed;
-	if (a->m.map[(int)(a->pl.pos_y + a->pl.dir_x * a->r.movespeed)][(int)(a->pl.pos_x)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y + a->pl.dir_x * a->r.movespeed)][(int)(a->pl.pos_x)] != '1')
-			a->pl.pos_y += a->pl.dir_x * a->r.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x - structures->player.dir_y * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x - structures->player.dir_y * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '1')
+			structures->player.pos_x -= structures->player.dir_y * structures->raycast.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y + structures->player.dir_x * structures->raycast.movespeed)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y + structures->player.dir_x * structures->raycast.movespeed)] != '1')
+			structures->player.pos_y += structures->player.dir_x * structures->raycast.movespeed;
 }
 
-void	key_a(t_a *a)
+void	right(t_structures *structures)
 {
-	if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x + a->pl.dir_y * a->r.movespeed)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y)][(int)(a->pl.pos_x + a->pl.dir_y * a->r.movespeed)] != '1')
-			a->pl.pos_x += a->pl.dir_y * a->r.movespeed;
-	if (a->m.map[(int)(a->pl.pos_y -a->pl.dir_x * a->r.movespeed)][(int)(a->pl.pos_x)] != '2')
-		if (a->m.map[(int)(a->pl.pos_y - a->pl.dir_x * a->r.movespeed)][(int)(a->pl.pos_x)] != '1')
-			a->pl.pos_y -= a->pl.dir_x * a->r.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x + structures->player.dir_y * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x + structures->player.dir_y * structures->raycast.movespeed)][(int)(structures->player.pos_y)] != '1')
+			structures->player.pos_x += structures->player.dir_y * structures->raycast.movespeed;
+	if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y -structures->player.dir_x * structures->raycast.movespeed)] != '2')
+		if (structures->map.map[(int)(structures->player.pos_x)][(int)(structures->player.pos_y - structures->player.dir_x * structures->raycast.movespeed)] != '1')
+			structures->player.pos_y -= structures->player.dir_x * structures->raycast.movespeed;
 }
 
-void	turn_left(t_a *a, int frequency)
+void	rotate_left(t_structures *structures)
 {
-	a->r.old_dirx = a->pl.dir_x;
-	a->pl.dir_x = a->pl.dir_x * cos(a->r.rotspeed * frequency) - a->pl.dir_y * sin(a->r.rotspeed * frequency);
-	a->pl.dir_y = a->r.old_dirx * sin(a->r.rotspeed * frequency) + a->pl.dir_y * cos(a->r.rotspeed * frequency);
-	a->r.old_planex = a->pl.plane_x;
-	a->pl.plane_x = a->pl.plane_x * cos(a->r.rotspeed * frequency) - a->pl.plane_y * sin(a->r.rotspeed * frequency);
-	a->pl.plane_y = a->r.old_planex * sin(a->r.rotspeed * frequency) + a->pl.plane_y * cos(a->r.rotspeed * frequency);
+	structures->raycast.prev_dir_x = structures->player.dir_x;
+	structures->player.dir_x = structures->player.dir_x * cos(-structures->raycast.rotspeed) - structures->player.dir_y * sin(-structures->raycast.rotspeed);
+	structures->player.dir_y = structures->raycast.prev_dir_x * sin(-structures->raycast.rotspeed) + structures->player.dir_y * cos(-structures->raycast.rotspeed);
+	structures->raycast.prev_plane_x = structures->player.plane_x;
+	structures->player.plane_x = structures->player.plane_x * cos(-structures->raycast.rotspeed) - structures->player.plane_y * sin(-structures->raycast.rotspeed);
+	structures->player.plane_y = structures->raycast.prev_plane_x * sin(-structures->raycast.rotspeed) + structures->player.plane_y * cos(-structures->raycast.rotspeed);
 }
 
-void	turn_right(t_a *a, int frequency)
+void	rotate_right(t_structures *structures)
 {
-	a->r.old_dirx = a->pl.dir_x;
-	a->pl.dir_x = a->pl.dir_x * cos(-a->r.rotspeed * frequency) - a->pl.dir_y * sin(-a->r.rotspeed * frequency);
-	a->pl.dir_y = a->r.old_dirx * sin(-a->r.rotspeed * frequency) + a->pl.dir_y * cos(-a->r.rotspeed * frequency);
-	a->r.old_planex = a->pl.plane_x;
-	a->pl.plane_x = a->pl.plane_x * cos(-a->r.rotspeed * frequency) - a->pl.plane_y * sin(-a->r.rotspeed * frequency);
-	a->pl.plane_y = a->r.old_planex * sin(-a->r.rotspeed * frequency) + a->pl.plane_y * cos(-a->r.rotspeed * frequency);
+	structures->raycast.prev_dir_x = structures->player.dir_x;
+	structures->player.dir_x = structures->player.dir_x * cos(structures->raycast.rotspeed) - structures->player.dir_y * sin(structures->raycast.rotspeed);
+	structures->player.dir_y = structures->raycast.prev_dir_x * sin(structures->raycast.rotspeed) + structures->player.dir_y * cos(structures->raycast.rotspeed);
+	structures->raycast.prev_plane_x = structures->player.plane_x;
+	structures->player.plane_x = structures->player.plane_x * cos(structures->raycast.rotspeed) - structures->player.plane_y * sin(structures->raycast.rotspeed);
+	structures->player.plane_y = structures->raycast.prev_plane_x * sin(structures->raycast.rotspeed) + structures->player.plane_y * cos(structures->raycast.rotspeed);
 }
 
-int		escape(t_a *a)
+int		escape(t_structures *structures)
 {
 	int	i;
 
 	i = 0;
-	while (a->m.map[i])
-		free(a->m.map[i++]);
-	free(a->m.map);
-	free(a->m.n);
-	free(a->m.s);
-	free(a->m.w);
-	free(a->m.e);
-	free(a->m.sp);
+	while (structures->map.map[i])
+		free(structures->map.map[i++]);
+	free(structures->map.map);
+	free(structures->map.north);
+	free(structures->map.south);
+	free(structures->map.west);
+	free(structures->map.east);
+	free(structures->map.sprite);
 	exit(1);
 	return (1);
 }
 
-void	movement(t_a *a)
+void	displacement(t_structures *structures)
 {
-	if (a->move.moveflag1 == 1)
-		key_w(a);
-	if (a->move.moveflag2 == 1)
-		key_s(a);
-	if (a->move.moveflag3 == 1)
-		key_a(a);
-	if (a->move.moveflag4 == 1)
-		key_d(a);
-	if (a->move.moveflag5 == 1)
-		turn_left(a, 3);
-	if (a->move.moveflag6 == 1)
-		turn_right(a, 3);
+	if (structures->move_flag.move_forward == 1)
+		forward(structures);
+	if (structures->move_flag.move_back == 1)
+		back(structures);
+	if (structures->move_flag.move_left == 1)
+		left(structures);
+	if (structures->move_flag.move_right == 1)
+		right(structures);
+	if (structures->move_flag.rotate_left == 1)
+		rotate_left(structures);
+	if (structures->move_flag.rotate_right == 1)
+		rotate_right(structures);
 }
 
-int		key_flagoff(int key, t_a *a)
+int		unpressed(int key, t_structures *structures)
 {
 	if (key == 13)
-		a->move.moveflag1 = 0;
+		structures->move_flag.move_forward = 0;
 	else if (key == 1)
-		a->move.moveflag2 = 0;
+		structures->move_flag.move_back = 0;
 	else if (key == 0)
-		a->move.moveflag3 = 0;
+		structures->move_flag.move_left = 0;
 	else if (key == 2)
-		a->move.moveflag4 = 0;
+		structures->move_flag.move_right = 0;
 	else if (key == 124)
-		a->move.moveflag5 = 0;
+		structures->move_flag.rotate_left = 0;
 	else if (key == 123)
-		a->move.moveflag6 = 0;
+		structures->move_flag.rotate_right = 0;
 	return (0);
 }
 
-int		key_flagon(int key, t_a *a)
+int		pressed(int key, t_structures *structures)
 {
 	if (key == 13)
-		a->move.moveflag1 = 1;
+		structures->move_flag.move_forward = 1;
 	else if (key == 1)
-		a->move.moveflag2 = 1;
+		structures->move_flag.move_back = 1;
 	else if (key == 0)
-		a->move.moveflag3 = 1;
+		structures->move_flag.move_left = 1;
 	else if (key == 2)
-		a->move.moveflag4 = 1;
+		structures->move_flag.move_right = 1;
 	else if (key == 124)
-		a->move.moveflag5 = 1;
+		structures->move_flag.rotate_left = 1;
 	else if (key == 123)
-		a->move.moveflag6 = 1;
+		structures->move_flag.rotate_right = 1;
 	else if (key == 53)
-		escape(a);
+		escape(structures);
 	return (0);
 }
 
@@ -196,82 +196,82 @@ int		loop_digit(char *pr)
 	return (0);
 }
 
-//PARCE SPETICIFATORS
+//PARCE SPETICIFICATORS
 
-int		parce_res(t_a *a, char **w)
+int		get_resolution(t_structures *structures, char **words)
 {
-	if ((loop_digit(w[1]) == 0) && (loop_digit(w[2]) == 0))
+	if ((loop_digit(words[1]) == 0) && (loop_digit(words[2]) == 0))
 	{
-		a->screen_width = ft_atoi(w[1]);
-		if (a->screen_width < 0)
+		structures->parcer.screen_width = ft_atoi(words[1]);
+		if (structures->parcer.screen_width < 0)
 			return (error("Negative resolution!"));
-		a->screen_height = ft_atoi(w[2]);
-		if (a->screen_height < 0)
+		structures->parcer.screen_height = ft_atoi(words[2]);
+		if (structures->parcer.screen_height < 0)
 			return (error("Negative resolution!"));
-		a->screen_width < 100 ? a->screen_width = 100 : 0;
-		a->screen_height < 100 ? a->screen_height = 100 : 0;
-		a->screen_width > 2560 ? a->screen_width = 2560 : 0;
-		a->screen_height > 1440 ? a->screen_height = 1440 : 0;
+		structures->parcer.screen_width < 100 ? structures->parcer.screen_width = 100 : 0;
+		structures->parcer.screen_height < 100 ? structures->parcer.screen_height = 100 : 0;
+		structures->parcer.screen_width > 2560 ? structures->parcer.screen_width = 2560 : 0;
+		structures->parcer.screen_height > 1440 ? structures->parcer.screen_height = 1440 : 0;
 	}
 	else
 		return (error("Wrong resolution input!"));
-	freeall(w);
+	freeall(words);
 	return (0);
 }
 
-int		parse_tex(t_a *a, char **w)
+int		parse_textures(t_structures *structures, char **words)
 {
 	int fd;
 
-	fd = open(w[1], O_RDONLY);
-	if (!ft_strncmp(w[0], "NO", 3)
-	&& !(fd < 0) && a->m.n == NULL)
-		a->m.n = ft_strdup(w[1]);
-	else if (!ft_strncmp(w[0], "SO", 3)
-	&& !(fd < 0) && a->m.s == NULL)
-		a->m.s = ft_strdup(w[1]);
-	else if (!ft_strncmp(w[0], "WE", 3)
-	&& !(fd < 0) && a->m.w == NULL)
-		a->m.w = ft_strdup(w[1]);
-	else if (!ft_strncmp(w[0], "EA", 3)
-	&& !(fd < 0) && a->m.e == NULL)
-		a->m.e = ft_strdup(w[1]);
-	else if (!ft_strncmp(w[0], "S", 2)
-	&& !(fd < 0) && a->m.sp == NULL)
-		a->m.sp = ft_strdup(w[1]);
+	fd = open(words[1], O_RDONLY);
+	if (!ft_strncmp(words[0], "NO", 3)
+	&& !(fd < 0) && structures->map.north == NULL)
+		structures->map.north = ft_strdup(words[1]);
+	else if (!ft_strncmp(words[0], "SO", 3)
+	&& !(fd < 0) && structures->map.south == NULL)
+		structures->map.south = ft_strdup(words[1]);
+	else if (!ft_strncmp(words[0], "WE", 3)
+	&& !(fd < 0) && structures->map.west == NULL)
+		structures->map.west = ft_strdup(words[1]);
+	else if (!ft_strncmp(words[0], "EA", 3)
+	&& !(fd < 0) && structures->map.east == NULL)
+		structures->map.east = ft_strdup(words[1]);
+	else if (!ft_strncmp(words[0], "S", 2)
+	&& !(fd < 0) && structures->map.sprite == NULL)
+		structures->map.sprite = ft_strdup(words[1]);
 	else
 		return (error("Wrong path, specificator, texture!"));
-	freeall(w);
+	freeall(words);
 	close(fd);
 	return (0);
 }
 
-int		n_w(char **w)
+int		number_words(char **words)
 {
 	int i;
 
 	i = 0;
-	while (w[i])
+	while (words[i])
 		i++;
 	return (i);
 }
 
-int		parse_fc(t_a *a, char **w)
+int		parse_fc(t_structures *structures, char **words)
 {
 	char **rgb;
 
-	if (!ft_strncmp(w[0], "F", 2) && a->f.fF == 0)
+	if (!ft_strncmp(words[0], "F", 2) && structures->flag.flag_floor == 0)
 	{
-		rgb = ft_split(w[1], ',');
-		if (n_w(rgb) == 3)
+		rgb = ft_split(words[1], ',');
+		if (number_words(rgb) == 3)
 		{
 			if (!loop_digit(rgb[0]) && !loop_digit(rgb[1]) && !loop_digit(rgb[2]))
 			{
 				if (ft_atoi(rgb[0]) <= 255 && ft_atoi(rgb[1]) <= 255 && ft_atoi(rgb[2]) <= 255
 				&& ft_atoi(rgb[0]) >= 0 && ft_atoi(rgb[1]) >= 0 && ft_atoi(rgb[2]) >= 0)
 				{
-					a->m.f = (ft_atoi(rgb[0]) << 16 | ft_atoi(rgb[1]) << 8 | ft_atoi(rgb[2]));
-					a->f.fF = 1;
+					structures->map.floor = (ft_atoi(rgb[0]) << 16 | ft_atoi(rgb[1]) << 8 | ft_atoi(rgb[2]));
+					structures->flag.flag_floor = 1;
 				}
 				else
 					return (error("Wrong value of color!"));
@@ -282,18 +282,18 @@ int		parse_fc(t_a *a, char **w)
 		else
 			return (error("Wrong color args!"));
 	}
-	else if (!ft_strncmp(w[0], "C", 2) && a->f.fC == 0)
+	else if (!ft_strncmp(words[0], "C", 2) && structures->flag.flag_ceiling == 0)
 	{
-		rgb = ft_split(w[1], ',');
-		if (n_w(rgb) == 3)
+		rgb = ft_split(words[1], ',');
+		if (number_words(rgb) == 3)
 		{
 			if (!loop_digit(rgb[0]) && !loop_digit(rgb[1]) && !loop_digit(rgb[2]))
 			{
 				if (ft_atoi(rgb[0]) <= 255 && ft_atoi(rgb[1]) <= 255 && ft_atoi(rgb[2]) <= 255
 				&& ft_atoi(rgb[0]) >= 0 && ft_atoi(rgb[1]) >= 0 && ft_atoi(rgb[2]) >= 0)
 				{
-					a->m.c = (ft_atoi(rgb[0]) << 16 | ft_atoi(rgb[1]) << 8 | ft_atoi(rgb[2]));
-					a->f.fC = 1;
+					structures->map.ceiling = (ft_atoi(rgb[0]) << 16 | ft_atoi(rgb[1]) << 8 | ft_atoi(rgb[2]));
+					structures->flag.flag_ceiling = 1;
 				}
 				else
 					return (error("Wrong value of color!"));
@@ -307,32 +307,32 @@ int		parse_fc(t_a *a, char **w)
 	else
 		return (error("Wrong color specificator!"));
 	freeall(rgb);
-	freeall(w);
+	freeall(words);
 	return (0);
 }
 
-int		main_hub(char *line, t_a *a)
+int		get_parameters(char *line, t_structures *structures)
 {
-	char	**w;
+	char	**words;
 	int		rt;
 
-	w = ft_split(line, ' ');
-	if (!ft_strncmp(w[0], "R", 2) && n_w(w) == 3 && a->f.fR == 0)
+	words = ft_split(line, ' ');
+	if (!ft_strncmp(words[0], "R", 2) && number_words(words) == 3 && structures->flag.flag_resolution == 0)
 	{
-		rt = parce_res(a, w);
-		a->f.fR = 1;
+		rt = get_resolution(structures, words);
+		structures->flag.flag_resolution = 1;
 	}
-	else if (('N' == *w[0] || 'S' == *w[0] || 'W' == *w[0]
-	|| 'E' == *w[0]) && n_w(w) == 2)
-		rt = parse_tex(a, w);
-	else if (('F' == *w[0] || 'C' == *w[0]) && n_w(w) == 2)
-		rt = parse_fc(a, w);
+	else if (('N' == *words[0] || 'S' == *words[0] || 'W' == *words[0]
+	|| 'E' == *words[0]) && number_words(words) == 2)
+		rt = parse_textures(structures, words);
+	else if (('F' == *words[0] || 'C' == *words[0]) && number_words(words) == 2)
+		rt = parse_fc(structures, words);
 	else
 		return (error("Wrong specificator or args!"));
 	return (rt);
 }
 
-//PARCE SPETICIFATORS
+//PARCE SPETICIFICATORS
 
 //PARCE MAP
 
@@ -350,16 +350,16 @@ int		spaces_line(char *line)
 	return (1);
 }
 
-int		check_line(t_a *a, int i, int j)
+int		check_line(t_structures *structures, int x, int y)
 {
-	if (i > 0 && j > 0 && (j + 1) < ft_strlen(a->m.map[i]) && (i + 1) < a->number_lines)
+	if (x > 0 && y > 0 && (y + 1) < ft_strlen(structures->map.map[x]) && (x + 1) < structures->parcer.number_lines)
 	{
-		if (j >= ft_strlen(a->m.map[i - 1]) || j >= ft_strlen(a->m.map[i + 1]))
+		if (y >= ft_strlen(structures->map.map[x - 1]) || y >= ft_strlen(structures->map.map[x + 1]))
 			return(error("Map is not closed!"));
-		if (a->m.map[i - 1][j] == ' ' || a->m.map[i + 1][j] == ' '
-		|| a->m.map[i][j - 1] == ' ' ||  a->m.map[i][j + 1] == ' '
-		|| a->m.map[i - 1][j - 1] == ' ' || a->m.map[i - 1][j + 1] == ' '
-		|| a->m.map[i + 1][j - 1] == ' ' ||  a->m.map[i + 1][j + 1] == ' ')
+		if (structures->map.map[x - 1][y] == ' ' || structures->map.map[x + 1][y] == ' '
+		|| structures->map.map[x][y - 1] == ' ' ||  structures->map.map[x][y + 1] == ' '
+		|| structures->map.map[x - 1][y - 1] == ' ' || structures->map.map[x - 1][y + 1] == ' '
+		|| structures->map.map[x + 1][y - 1] == ' ' ||  structures->map.map[x + 1][y + 1] == ' ')
 			return(error("Map is not closed!"));
 	}
 	else
@@ -367,98 +367,98 @@ int		check_line(t_a *a, int i, int j)
 	return (0);
 }
 
-int		player_dir(t_a *a, char direction, int y, int x)
+int		player_dir(t_structures *structures, char direction, int x, int y)
 {
+	if (direction == 'N')
+	{
+		structures->player.dir_x = -1;
+		structures->player.dir_y = 0;
+		structures->player.plane_x = 0;
+		structures->player.plane_y = 0.66;
+	}
 	if (direction == 'S')
 	{
-		a->pl.dir_x = 0;
-		a->pl.dir_y = 1;
-		a->pl.plane_x = -0.66;
-		a->pl.plane_y = 0;
+		structures->player.dir_x = 1;
+		structures->player.dir_y = 0;
+		structures->player.plane_x = 0;
+		structures->player.plane_y = -0.66;
 	}
 	if (direction == 'E')
 	{
-		a->pl.dir_x = 1;
-		a->pl.dir_y = 0;
-		a->pl.plane_x = 0;
-		a->pl.plane_y = 0.66;
+		structures->player.dir_x = 0;
+		structures->player.dir_y = 1;
+		structures->player.plane_x = 0.66;
+		structures->player.plane_y = 0;
 	}
 	if (direction == 'W')
 	{
-		a->pl.dir_x = -1;
-		a->pl.dir_y = 0;
-		a->pl.plane_x = 0;
-		a->pl.plane_y = -0.66;
+		structures->player.dir_x = 0;
+		structures->player.dir_y = -1;
+		structures->player.plane_x = -0.66;
+		structures->player.plane_y = 0;
 	}
-	if (direction == 'N')
-	{
-		a->pl.dir_x = 0;
-		a->pl.dir_y = -1;
-		a->pl.plane_x = 0.66;
-		a->pl.plane_y = 0;
-	}
-	a->pl.pos_y = (int)y;
-	a->pl.pos_x = (int)x;
+	structures->player.pos_x = (int)x;
+	structures->player.pos_y = (int)y;
 	return (0);
 }
 
-int		val_map(t_a *a)
+int		validate_map(t_structures *structures)
 {
-	int	y;
 	int	x;
+	int	y;
 
-	y = 0;
-	a->p_flag = 0;
-	while(a->m.map[y])
+	x = 0;
+	structures->parcer.player_flag = 0;
+	while(structures->map.map[x])
 	{
-		x = 0;
-		while(a->m.map[y][x])
+		y = 0;
+		while(structures->map.map[x][y])
 		{
-			if (a->m.map[y][x] == ' ' || a->m.map[y][x] == '1')
-				x++;
-			if (a->m.map[y][x] == '0' || a->m.map[y][x] == '2'
-			|| a->m.map[y][x] == 'N' || a->m.map[y][x] == 'S'
-			|| a->m.map[y][x] == 'W' || a->m.map[y][x] == 'E')
+			if (structures->map.map[x][y] == ' ' || structures->map.map[x][y] == '1')
+				y++;
+			if (structures->map.map[x][y] == '0' || structures->map.map[x][y] == '2'
+			|| structures->map.map[x][y] == 'N' || structures->map.map[x][y] == 'S'
+			|| structures->map.map[x][y] == 'W' || structures->map.map[x][y] == 'E')
 			{
-				if (a->p_flag > 1)
+				if (structures->parcer.player_flag > 1)
 					return(error("More than one player!"));
-				if ((a->m.map[y][x] == 'N' || a->m.map[y][x] == 'S' || a->m.map[y][x] == 'W' || a->m.map[y][x] == 'E') && a->p_flag == 0)
+				if ((structures->map.map[x][y] == 'N' || structures->map.map[x][y] == 'S' || structures->map.map[x][y] == 'W' || structures->map.map[x][y] == 'E') && structures->parcer.player_flag == 0)
 				{
-					a->p_flag++;
-					player_dir(a, a->m.map[y][x], y, x);
+					structures->parcer.player_flag++;
+					player_dir(structures, structures->map.map[x][y], x, y);
 				}
-				check_line(a, y, x);
+				check_line(structures, x, y);
 			}
-			x++;
+			y++;
 		}
-		y++;
+		x++;
 	}
-	if (a->p_flag == 0)
+	if (structures->parcer.player_flag == 0)
 		return(error("No player on map!"));
 	return (0);
 }
 
-char	**make_map(t_list **head, int size, t_a *a)
+char	**make_map(t_list **head, int size, t_structures *structures)
 {
 	int		i;
 	t_list	*tmp;
 
 	i = 0;
 	tmp = *head;
-	if(!(a->m.map = ft_calloc(size + 1, sizeof(char *))))
+	if(!(structures->map.map = ft_calloc(size + 1, sizeof(char *))))
 		return(0);
 	while (tmp)
 	{
-		a->m.map[i] = ft_strdup(tmp->content);
+		structures->map.map[i] = ft_strdup(tmp->content);
 		tmp = tmp->next;
 		i++;
 	}
-	a->m.map[i] = NULL;
+	structures->map.map[i] = NULL;
 	ft_lstclear(head, &free);
 	return (0);
 }
 
-int     val_line(char *line)
+int     validate_line(char *line)
 {
     while(*line != 0)
     {
@@ -472,113 +472,370 @@ int     val_line(char *line)
     return (0);
 }
 
-char	**read_map(t_a *a, char *line)
+char	**read_map(t_structures *structures, char *line)
 {
 	t_list		*head;
 
 	head = NULL;
-	val_line(line);
+	validate_line(line);
 	(line[0] != '\0') ? ft_lstadd_back(&head, ft_lstnew(line)) : free(line);
-	while (get_next_line(a->fd, &line) > 0)
+	while (get_next_line(structures->parcer.fd, &line) > 0)
 	{
-		val_line(line);
+		validate_line(line);
 		(line[0] != '\0') ? ft_lstadd_back(&head, ft_lstnew(line)) : free(line);
 	}
 	(line[0] != '\0') ? ft_lstadd_back(&head, ft_lstnew(line)) : free(line);
-	close(a->fd);
-	a->number_lines = ft_lstsize(head);
-	return (make_map(&head, a->number_lines, a));
+	close(structures->parcer.fd);
+	structures->parcer.number_lines = ft_lstsize(head);
+	return (make_map(&head, structures->parcer.number_lines, structures));
 }
 
 //PARCE MAP
 
+//SPRITES
+
+int		sprite_count(t_structures *structures)
+{
+	int x;
+	int y;
+	int sprite_num;
+
+	x = -1;
+	sprite_num = 0;
+	while (structures->map.map[++x])
+	{
+		y = -1;
+		while (structures->map.map[x][++y])
+		{
+			if (structures->map.map[x][y] == '2')
+				sprite_num++;
+		}
+	}
+	return (sprite_num);
+}
+
+int		**sprite_coordinates(t_structures *structures)
+{
+	int		**sprite_coordinates;
+	int		x;
+	int		y;
+	int		i;
+
+	x = -1;
+	i = -1;
+	if ((sprite_coordinates = (int **)ft_calloc(sprite_count(structures) + 1,
+		sizeof(int *))) == 0)
+		return (0);
+	while (structures->map.map[++x])
+	{
+		y = -1;
+		while (structures->map.map[x][++y])
+		{
+			if (structures->map.map[x][y] == '2')
+			{
+				if ((sprite_coordinates[++i] = ft_calloc(sizeof(int), 3)) == 0)
+					return (0);
+				sprite_coordinates[i][0] = x;
+				sprite_coordinates[i][1] = y;
+			}
+		}
+	}
+	return (sprite_coordinates);
+}
+
+double	get_distance(t_structures *structures, int j)
+{
+	return (((structures->player.pos_x - structures->sprite.sprite[j][0]) * (structures->player.pos_x
+		- structures->sprite.sprite[j][0]) + (structures->player.pos_y -
+			structures->sprite.sprite[j][1]) * (structures->player.pos_y -
+				structures->sprite.sprite[j][1])));
+}
+
+void	sort_sprites(int amount, t_structures *structures)
+{
+	int		j;
+	double	distance1;
+	double	distance2;
+	int		x;
+	int		y;
+
+	j = -1;
+	while (++j < amount - 1)
+	{
+		distance1 = get_distance(structures, j);
+		distance2 = get_distance(structures, j + 1);
+		if (distance1 < distance2)
+		{
+			x = structures->sprite.sprite[j][0];
+			y = structures->sprite.sprite[j][1];
+			structures->sprite.sprite[j][0] = structures->sprite.sprite[j + 1][0];
+			structures->sprite.sprite[j][1] = structures->sprite.sprite[j + 1][1];
+			structures->sprite.sprite[j + 1][0] = x;
+			structures->sprite.sprite[j + 1][1] = y;
+			j = -1;
+		}
+	}
+}
+
+void	sprite_calc(t_structures *structures, int i)
+{
+	structures->sprite.sprite_x = structures->sprite.sprite[i][0] - structures->player.pos_x + 0.5;
+	structures->sprite.sprite_y = structures->sprite.sprite[i][1] - structures->player.pos_y + 0.5;
+	structures->sprite.inv_det = 1.0 / (structures->player.plane_x * structures->player.dir_y - structures->player.dir_x * structures->player.plane_y);
+	structures->sprite.depth_x = structures->sprite.inv_det * (structures->player.dir_y * structures->sprite.sprite_x - structures->player.dir_x * structures->sprite.sprite_y);
+	structures->sprite.depth_y = structures->sprite.inv_det * (-structures->player.plane_y * structures->sprite.sprite_x + structures->player.plane_x * structures->sprite.sprite_y);
+	structures->sprite.pos_on_screen = (int)((structures->parcer.screen_width / 2) * (1 + structures->sprite.depth_x / structures->sprite.depth_y));
+	structures->sprite.sprite_height = fabs((structures->parcer.screen_height / (structures->sprite.depth_y)));
+	structures->sprite.start_point_x = -structures->sprite.sprite_height / 2 + structures->parcer.screen_height / 2;
+}
+
+void	sprite_start_end(t_structures *structures)
+{
+	if (structures->sprite.start_point_x < 0)
+		structures->sprite.start_point_x = 0;
+	structures->sprite.start_point_y = structures->sprite.sprite_height / 2 +
+		structures->parcer.screen_height / 2;
+	if (structures->sprite.start_point_y >= structures->parcer.screen_height)
+		structures->sprite.start_point_y = structures->parcer.screen_height - 1;
+	structures->sprite.sprite_width = fabs((structures->parcer.screen_height /
+		(structures->sprite.depth_y)));
+	structures->sprite.stop_point_y = -structures->sprite.sprite_width / 2 +
+		structures->sprite.pos_on_screen;
+	if (structures->sprite.stop_point_y < 0)
+		structures->sprite.stop_point_y = 0;
+	structures->sprite.stop_point_x = structures->sprite.sprite_width / 2 +
+		structures->sprite.pos_on_screen;
+	if (structures->sprite.stop_point_x >= structures->parcer.screen_width)
+		structures->sprite.stop_point_x = structures->parcer.screen_width - 1;
+}
+
+void	sprite_stroke_draw(t_structures *structures)
+{
+	int				y;
+	int				d;
+	unsigned int	color;
+
+	y = structures->sprite.start_point_x - 1;
+	while (++y < structures->sprite.start_point_y)
+	{
+		d = (y) * 256 - structures->parcer.screen_height * 128 +
+			structures->sprite.sprite_height * 128;
+		structures->sprite.tex_y = ((d * structures->texture.height[4]) /
+			structures->sprite.sprite_height) / 256;
+		color = texture_color(structures, structures->sprite.tex_x, structures->sprite.tex_y, 4);
+		if ((color & 0x00FFFFFF) != 0)
+			my_pixel_put(structures, structures->sprite.stroke, y, color);
+	}
+}
+
+void	sprite_cast(t_structures *structures, double *buffer_w)
+{
+	int	i;
+
+	structures->sprite.sprite_num = sprite_count(structures);
+	sort_sprites(structures->sprite.sprite_num, structures);
+	i = -1;
+	while (++i < structures->sprite.sprite_num)
+	{
+		sprite_calc(structures, i);
+		sprite_start_end(structures);
+		structures->sprite.stroke = structures->sprite.stop_point_y - 1;
+		while (++structures->sprite.stroke < structures->sprite.stop_point_x)
+		{
+			structures->sprite.tex_x = (int)(256 * (structures->sprite.stroke -
+				(-structures->sprite.sprite_width / 2 + structures->sprite.pos_on_screen))
+					* structures->texture.width[4] / structures->sprite.sprite_width) / 256;
+			if (structures->sprite.depth_y > 0 && structures->sprite.stroke > 0 &&
+				structures->sprite.stroke < structures->parcer.screen_width &&
+					structures->sprite.depth_y < buffer_w[structures->sprite.stroke])
+				sprite_stroke_draw(structures);
+		}
+	}
+}
+
+
+//SPRITES
+
 //RAYCAST
 
-void	my_pixel_put(t_a *a, int x, int y, int color)
+unsigned int	texture_color(t_structures *structures, int x, int y, int cardinal_point)
+{
+	char			*dst;
+	unsigned int	color;
+
+	dst = structures->texture_data[cardinal_point].addr + (y * structures->texture_data[cardinal_point].line_length + x * (structures->texture_data[cardinal_point].bpp / 8));
+	color = *(unsigned int*)dst;
+	return (color);
+}
+
+void	get_data_tex(t_structures *structures)
+{
+	structures->texture_data[0].img = mlx_xpm_file_to_image(structures->data.mlx, structures->map.west, &structures->texture.width[0], &structures->texture.height[0]);
+	structures->texture_data[0].addr = mlx_get_data_addr(structures->texture_data[0].img, &structures->texture_data[0].bpp, &structures->texture_data[0].line_length, &structures->texture_data[0].endian);
+	structures->texture_data[1].img = mlx_xpm_file_to_image(structures->data.mlx, structures->map.north, &structures->texture.width[1], &structures->texture.height[1]);
+	structures->texture_data[1].addr = mlx_get_data_addr(structures->texture_data[1].img, &structures->texture_data[1].bpp, &structures->texture_data[1].line_length, &structures->texture_data[1].endian);
+	structures->texture_data[2].img = mlx_xpm_file_to_image(structures->data.mlx, structures->map.east, &structures->texture.width[2], &structures->texture.height[2]);
+	structures->texture_data[2].addr = mlx_get_data_addr(structures->texture_data[2].img, &structures->texture_data[2].bpp, &structures->texture_data[2].line_length, &structures->texture_data[2].endian);
+	structures->texture_data[3].img = mlx_xpm_file_to_image(structures->data.mlx, structures->map.south, &structures->texture.width[3], &structures->texture.height[3]);
+	structures->texture_data[3].addr = mlx_get_data_addr(structures->texture_data[3].img, &structures->texture_data[3].bpp, &structures->texture_data[3].line_length, &structures->texture_data[3].endian);
+	structures->texture_data[4].img = mlx_xpm_file_to_image(structures->data.mlx, structures->map.sprite, &structures->texture.width[4], &structures->texture.height[4]);
+	structures->texture_data[4].addr = mlx_get_data_addr(structures->texture_data[4].img, &structures->texture_data[4].bpp, &structures->texture_data[4].line_length, &structures->texture_data[4].endian);
+}
+
+int		take_side(t_structures *structures)
+{
+	int	rtn;
+
+	if (structures->player.pos_x >= structures->raycast.map_x && structures->player.pos_y >= structures->raycast.map_y)
+		rtn = structures->raycast.side == 1 ? 0 : 1;
+	else if (structures->player.pos_x >= structures->raycast.map_x && structures->player.pos_y <= structures->raycast.map_y)
+		rtn = structures->raycast.side == 1 ? 2 : 1;
+	else if (structures->player.pos_x <= structures->raycast.map_x && structures->player.pos_y <= structures->raycast.map_y)
+		rtn = structures->raycast.side == 1 ? 2 : 3;
+	else
+		rtn = structures->raycast.side == 1 ? 0 : 3;
+	return (rtn);
+}
+
+void	my_pixel_put(t_structures *structures, int x, int y, int color)
 {
     char    *dst;
 
-    dst = a->data.addr + (y * a->data.line_length + x * (a->data.bpp / 8));
+    dst = structures->data.addr + (y * structures->data.line_length + x * (structures->data.bpp / 8));
     *(unsigned int *)dst = color;
 }
 
-int		cube(t_a *a)
+void		line_height(t_structures *structures)
 {
-    a->x = 0;
+	structures->raycast.line_height = (int)(structures->parcer.screen_height / structures->raycast.perp_wall_dist);
+	structures->raycast.draw_start = -structures->raycast.line_height / 2 + structures->parcer.screen_height / 2;
+	if (structures->raycast.draw_start < 0)
+		structures->raycast.draw_start = 0;
+	structures->raycast.draw_end = structures->raycast.line_height / 2 + structures->parcer.screen_height / 2;
+	if (structures->raycast.draw_end >= structures->parcer.screen_height)
+		structures->raycast.draw_end = structures->parcer.screen_height - 1;
+	// if (structures->raycast.draw_end % 2 != 0)
+	// 	structures->raycast.draw_end += 0.035;
+	// if (structures->raycast.draw_start % 2 != 0)
+	// 	structures->raycast.draw_start += 0.035;
+}
 
-	movement(a);
-    a->data.img = mlx_new_image(a->data.mlx, a->screen_width, a->screen_height);
-    a->data.addr = mlx_get_data_addr(a->data.img, &a->data.bpp, &a->data.line_length, &a->data.endian);
-    while (a->x < (float)a->screen_width)
+void	texture_wall(t_structures *structures, int iterator)
+{
+	int	cardinal_point;
+
+	cardinal_point = take_side(structures);
+	if (structures->raycast.side == 0)
+		structures->texture.wall_x = structures->player.pos_y + structures->raycast.perp_wall_dist * structures->raycast.ray_dir_y;
+	else
+		structures->texture.wall_x = structures->player.pos_x + structures->raycast.perp_wall_dist * structures->raycast.ray_dir_x;
+	structures->texture.wall_x -= floor(structures->texture.wall_x);
+	structures->texture.tex_x = (int)(structures->texture.wall_x * (double)(structures->texture.width[cardinal_point]));
+	if (structures->raycast.side == 0 && structures->raycast.ray_dir_x > 0)
+		structures->texture.tex_x = structures->texture.width[cardinal_point] - structures->texture.tex_x - 1;
+	if (structures->raycast.side == 1 && structures->raycast.ray_dir_y < 0)
+		structures->texture.tex_x = structures->texture.width[cardinal_point] - structures->texture.tex_x - 1;
+	structures->texture.step = 1.0 * structures->texture.height[cardinal_point] / structures->raycast.line_height;
+	structures->texture.tex_pos = (structures->raycast.draw_start - structures->parcer.screen_height / 2 + structures->raycast.line_height / 2) * structures->texture.step;
+	while (structures->raycast.draw_start < structures->raycast.draw_end)
+	{
+		structures->texture.tex_y = (int)structures->texture.tex_pos & (structures->texture.height[cardinal_point] - 1);
+		structures->texture.tex_pos += structures->texture.step;
+		my_pixel_put(structures, iterator, structures->raycast.draw_start++, texture_color(structures, structures->texture.tex_x, structures->texture.tex_y, cardinal_point));
+	}
+}
+
+void		floor_ceiling(t_structures *structures, int start, int end, int width)
+{
+	if (start == 0)
+		while (start < end)
+			my_pixel_put(structures, width, start++, structures->map.floor);
+	else
+		while (start < end)
+			my_pixel_put(structures, width, start++, structures->map.ceiling);
+}
+
+int		cube(t_structures *structures)
+{
+    structures->raycast.iterator = -1;
+	double tmp_line[(int)structures->parcer.screen_width];
+
+	displacement(structures);
+    structures->data.img = mlx_new_image(structures->data.mlx, structures->parcer.screen_width, structures->parcer.screen_height);
+    structures->data.addr = mlx_get_data_addr(structures->data.img, &structures->data.bpp, &structures->data.line_length, &structures->data.endian);
+    while (++structures->raycast.iterator < structures->parcer.screen_width)
     {
-        a->r.camera = 2 * a->x / (double)a->screen_width - 1;
-        a->r.ray_dirx = a->pl.dir_x + a->pl.plane_x * a->r.camera;
-        a->r.ray_diry = a->pl.dir_y + a->pl.plane_y * a->r.camera;
+        structures->raycast.camera = 2 * structures->raycast.iterator / (double)structures->parcer.screen_width - 1;
+        structures->raycast.ray_dir_x = structures->player.dir_x + structures->player.plane_x * structures->raycast.camera;
+        structures->raycast.ray_dir_y = structures->player.dir_y + structures->player.plane_y * structures->raycast.camera;
 
-        a->r.map_x = (int)a->pl.pos_x;
-        a->r.map_y = (int)a->pl.pos_y;
+        structures->raycast.map_x = (int)structures->player.pos_x;
+        structures->raycast.map_y = (int)structures->player.pos_y;
 
-        a->r.delta_distx = fabs(1 / a->r.ray_dirx);
-        a->r.delta_disty = fabs(1 / a->r.ray_diry);
+		if (structures->raycast.ray_dir_y == 0)
+			structures->raycast.delta_dist_x = 0;
+		else if (structures->raycast.ray_dir_x == 0)
+			structures->raycast.delta_dist_x = 0;
+		else
+			structures->raycast.delta_dist_x = fabs(1 / structures->raycast.ray_dir_x);
+		if (structures->raycast.ray_dir_x == 0)
+			structures->raycast.delta_dist_y = 0;
+		else if (structures->raycast.ray_dir_x == 0)
+			structures->raycast.delta_dist_y = 0;
+		else
+			structures->raycast.delta_dist_y = fabs(1 / structures->raycast.ray_dir_y);
 
-        a->r.hit = 0;
-        if (a->r.ray_dirx < 0)
+        structures->raycast.hit = 0;
+        if (structures->raycast.ray_dir_x < 0)
         {
-            a->r.step_x = -1;
-            a->r.side_dist_x = (a->pl.pos_x - a->r.map_x) * a->r.delta_distx;
+            structures->raycast.step_x = -1;
+            structures->raycast.side_dist_x = (structures->player.pos_x - structures->raycast.map_x) * structures->raycast.delta_dist_x;
         }
         else
         {
-            a->r.step_x = 1;
-            a->r.side_dist_x = (a->r.map_x + 1.0 - a->pl.pos_x) * a->r.delta_distx;
+            structures->raycast.step_x = 1;
+            structures->raycast.side_dist_x = (structures->raycast.map_x + 1.0 - structures->player.pos_x) * structures->raycast.delta_dist_x;
         }
-        if (a->r.ray_diry < 0)
+        if (structures->raycast.ray_dir_y < 0)
         {
-            a->r.step_y = -1;
-            a->r.side_dist_y = (a->pl.pos_y - a->r.map_y) * a->r.delta_disty;
+            structures->raycast.step_y = -1;
+            structures->raycast.side_dist_y = (structures->player.pos_y - structures->raycast.map_y) * structures->raycast.delta_dist_y;
         }
         else
         {
-            a->r.step_y = 1;
-            a->r.side_dist_y = (a->r.map_y + 1.0 - a->pl.pos_y) * a->r.delta_disty;
+            structures->raycast.step_y = 1;
+            structures->raycast.side_dist_y = (structures->raycast.map_y + 1.0 - structures->player.pos_y) * structures->raycast.delta_dist_y;
         }
-        while (a->r.hit == 0)
+        while (structures->raycast.hit == 0)
         {
-            if (a->r.side_dist_x < a->r.side_dist_y)
+            if (structures->raycast.side_dist_x < structures->raycast.side_dist_y)
             {
-                a->r.side_dist_x += a->r.delta_distx;
-                a->r.map_x += a->r.step_x;
-                a->r.side = 0;
+                structures->raycast.side_dist_x += structures->raycast.delta_dist_x;
+                structures->raycast.map_x += structures->raycast.step_x;
+                structures->raycast.side = 0;
             }
             else
             {
-                a->r.side_dist_y += a->r.delta_disty;
-                a->r.map_y += a->r.step_y;
-                a->r.side = 1;
+                structures->raycast.side_dist_y += structures->raycast.delta_dist_y;
+                structures->raycast.map_y += structures->raycast.step_y;
+                structures->raycast.side = 1;
             }
-            if (a->m.map[a->r.map_y][a->r.map_x] == '1')
-                a->r.hit = 1;
+            if (structures->map.map[structures->raycast.map_x][structures->raycast.map_y] == '1')
+                structures->raycast.hit = 1;
         }
-        if (a->r.side == 0)
-            a->r.perp_wall_dist = (a->r.map_x - a->pl.pos_x + (1 - a->r.step_x) / 2) / a->r.ray_dirx;
+        if (structures->raycast.side == 0)
+            structures->raycast.perp_wall_dist = (structures->raycast.map_x - structures->player.pos_x + (1 - structures->raycast.step_x) / 2) / structures->raycast.ray_dir_x;
         else
-            a->r.perp_wall_dist = (a->r.map_y - a->pl.pos_y + (1 - a->r.step_y) / 2) / a->r.ray_diry;
-        a->r.line_height = (int)(a->screen_height / a->r.perp_wall_dist);
-        a->r.draw_start = -a->r.line_height / 2 + a->screen_height / 2;
-        if (a->r.draw_start < 0)
-            a->r.draw_start = 0;
-        a->r.draw_end = a->r.line_height / 2 + a->screen_height / 2;
-        if (a->r.draw_end >= a->screen_height)
-            a->r.draw_end = a->screen_height - 1;
-        while (a->r.draw_start < a->r.draw_end)
-        {
-            my_pixel_put(a, a->x, a->r.draw_start, 0xFFFFFF);
-            a->r.draw_start++;
-        }
-        a->x++;
+            structures->raycast.perp_wall_dist = (structures->raycast.map_y - structures->player.pos_y + (1 - structures->raycast.step_y) / 2) / structures->raycast.ray_dir_y;
+		line_height(structures);
+		floor_ceiling(structures, 0, structures->raycast.draw_start, structures->raycast.iterator);
+		texture_wall(structures, structures->raycast.iterator);
+		floor_ceiling(structures, structures->raycast.draw_end, structures->parcer.screen_height, structures->raycast.iterator);
+		tmp_line[structures->raycast.iterator] = structures->raycast.perp_wall_dist;
     }
-    mlx_put_image_to_window(a->data.mlx, a->data.win, a->data.img, 0, 0);
-    mlx_destroy_image(a->data.mlx, a->data.img);
+	sprite_cast(structures, tmp_line);
+    mlx_put_image_to_window(structures->data.mlx, structures->data.win, structures->data.img, 0, 0);
+    mlx_destroy_image(structures->data.mlx, structures->data.img);
 	return (0);
 }
 
@@ -587,50 +844,34 @@ int		parser(char **av)
 {
 	int i;
 	int rt;
-	t_a a;
+	t_structures structures;
 
 	i = 0;
-	struct_init(&a);
-	a.fd = open(av[1], O_RDONLY);
-	while (get_next_line(a.fd, &a.line) && i < 8)
+	struct_init(&structures);
+	structures.parcer.fd = open(av[1], O_RDONLY);
+	while (get_next_line(structures.parcer.fd, &structures.parcer.line) && i < 8)
 	{
-		if (!(a.line[0] == '\0') && !spaces_line(a.line))
+		if (!(structures.parcer.line[0] == '\0') && !spaces_line(structures.parcer.line))
 		{
 			i++;
-			rt = main_hub(a.line, &a);
+			rt = get_parameters(structures.parcer.line, &structures);
 		}
-		free(a.line);
+		free(structures.parcer.line);
 	}
-	read_map(&a, a.line);
-	val_map(&a);
-	close(a.fd);
-
-   	a.data.mlx = mlx_init();
-	a.data.win = mlx_new_window(a.data.mlx, a.screen_width, a.screen_height, "maze");
-	a.data.img = mlx_new_image(a.data.mlx, a.screen_width, a.screen_height);
-    a.data.addr = mlx_get_data_addr(a.data.img, &a.data.bpp, &a.data.line_length, &a.data.endian);
-	mlx_hook(a.data.win, 2, 0, key_flagon, &a);
-	mlx_hook(a.data.win, 17, 0, escape, &a);
-	mlx_hook(a.data.win, 3, 0, key_flagoff, &a);
-	mlx_loop_hook(a.data.mlx, cube, &a);
-    mlx_loop(a.data.mlx);
-
-	// TEST
-	printf("|width:   %d|\n", a.screen_width);
-	printf("|height:   %d|\n", a.screen_height);
-	printf("|path_no: %s|\n", a.m.n);
-	printf("|path_we: %s|\n", a.m.w);
-	printf("|path_ea: %s|\n", a.m.e);
-	printf("|path_so: %s|\n", a.m.s);
-	printf("|path_sp: %s|\n", a.m.sp);
-	printf("|f:       %d|\n", a.m.f);
-	printf("|c:       %d|\n", a.m.c);
-	printf("|r_flag:  %d|\n", a.f.fR);
-	printf("|f_flag:  %d|\n", a.f.fF);
-	printf("|c_flag:  %d|\n", a.f.fC);
-	i = -1;
-	while(a.m.map[++i])
-		ft_putendl_fd(a.m.map[i], 1);
-	printf("|number of lines:  %d|\n", a.number_lines);
+	read_map(&structures, structures.parcer.line);
+	validate_map(&structures);
+	close(structures.parcer.fd);
+	if ((structures.sprite.sprite = sprite_coordinates(&structures)) == 0)
+		return (0);
+   	structures.data.mlx = mlx_init();
+	structures.data.win = mlx_new_window(structures.data.mlx, structures.parcer.screen_width, structures.parcer.screen_height, "maze");
+	// structures.data.img = mlx_new_image(structures.data.mlx, structures.parcer.screen_width, structures.parcer.screen_height);
+    // structures.data.addr = mlx_get_data_addr(structures.data.img, &structures.data.bpp, &structures.data.line_length, &structures.data.endian);
+	get_data_tex(&structures);
+	mlx_hook(structures.data.win, 2, 0, pressed, &structures);
+	mlx_hook(structures.data.win, 3, 0, unpressed, &structures);
+	mlx_hook(structures.data.win, 17, 0, escape, &structures);
+	mlx_loop_hook(structures.data.mlx, cube, &structures);
+    mlx_loop(structures.data.mlx);
 	return (0);
 }

@@ -6,7 +6,7 @@
 /*   By: mhumfrey <mhumfrey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 21:44:17 by mhumfrey          #+#    #+#             */
-/*   Updated: 2021/01/31 21:39:51 by mhumfrey         ###   ########.fr       */
+/*   Updated: 2021/02/04 21:00:26 by mhumfrey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,29 @@
 # include <math.h>
 # include <unistd.h>
 
-typedef struct	s_m
+typedef struct	s_parcer
 {
-	char		*n;
-	char		*s;
-	char		*w;
-	char		*e;
-	char		*sp;
-	int			f;
-	int			c;
+	char		*line;
+	int			number_lines;
+	int			fd;
+	double		screen_width;
+	double		screen_height;
+	int			player_flag;
+	int			x;
+}				t_parcer;
+
+typedef struct	s_map
+{
 	char		**map;
+	char		*north;
+	char		*south;
+	char		*west;
+	char		*east;
+	char		*sprite;
+	int			floor;
+	int			ceiling;
 	int			p_pos[2];
-	int			save_flag;
-}				t_m;
+}				t_map;
 
 typedef struct	s_data
 {
@@ -44,7 +54,7 @@ typedef struct	s_data
 	void		*win;
 }				t_data;
 
-typedef struct	s_pl
+typedef struct	s_player
 {
 	double		pos_x;
 	double		pos_y;
@@ -52,22 +62,22 @@ typedef struct	s_pl
 	double		dir_y;
 	double		plane_x;
 	double		plane_y;
-	double		old_xpos;
-	double		old_ypos;
+	double		prev_pos_x;
+	double		prev_pos_y;
 	int			pos_flag;
-}				t_pl;
+}				t_player;
 
-typedef struct	s_move
+typedef struct	s_move_flag
 {
-	int			moveflag1;
-	int			moveflag2;
-	int			moveflag3;
-	int			moveflag4;
-	int			moveflag5;
-	int			moveflag6;
-}				t_move;
+	int			move_forward;
+	int			move_back;
+	int			move_left;
+	int			move_right;
+	int			rotate_left;
+	int			rotate_right;
+}				t_move_flag;
 
-typedef struct	s_r
+typedef struct	s_raycast
 {
 	double		fov;
 	double		width;
@@ -76,32 +86,33 @@ typedef struct	s_r
 	double		map_width;
 	int			map_x;
 	int			map_y;
-	double		xray_lenght;
-	double		yray_lenght;
-	double		ray_dist_to_plane;
+	double		ray_lenght_x;
+	double		ray_lenght_y;
+	double		dist_to_plane;
 	int			step_x;
 	int			step_y;
 	int			side;
-	double		delta_distx;
-	double		delta_disty;
+	double		delta_dist_x;
+	double		delta_dist_y;
 	int			line_height;
 	int			draw_start;
 	int			draw_end;
 	double		camera;
-	double		ray_dirx;
-	double		ray_diry;
-	int			x;
+	double		ray_dir_x;
+	double		ray_dir_y;
+	int			iterator;
 	int			hit;
 	double		movespeed;
-	double		old_dirx;
-	double		old_planex;
+	double		prev_dir_x;
+	double		prev_plane_x;
 	double		rotspeed;
 	double      side_dist_x;
     double      side_dist_y;
 	double      perp_wall_dist;
-}				t_r;
+	double		*tmp_line2;
+}				t_raycast;
 
-typedef struct	s_tex
+typedef struct	s_texture
 {
 	int			height[5];
 	int			width[5];
@@ -110,16 +121,16 @@ typedef struct	s_tex
 	int			tex_y;
 	double		tex_pos;
 	double		step;
-}				t_tex;
+}				t_texture;
 
-typedef struct	s_tex_data
+typedef struct	s_texture_data
 {
 	void		*img;
 	char		*addr;
 	int			bpp;
 	int			line_length;
 	int			endian;
-}				t_tex_data;
+}				t_texture_data;
 
 typedef struct	s_floor
 {
@@ -161,37 +172,33 @@ typedef struct	s_sprite
 	int			sprite_num;
 }				t_sprite;
 
-typedef struct	s_f
+typedef struct	s_flag
 {
-	int			fR;
-	int			fF;
-	int			fC;
+	int			flag_resolution;
+	int			flag_floor;
+	int			flag_ceiling;
 
-}				t_f;
+}				t_flag;
 
 
-typedef struct	s_a
+typedef struct	s_structures
 {
-	t_m			m;
-	t_f			f;
-	t_data		data;
-	t_r			r;
-	t_pl		pl;
-	t_tex		tex;
-	t_tex_data	tex_data[5];
-	t_floor		floor;
-	t_move		move;
-	t_sprite	sprite;
-	char		*line;
-	int			number_lines;
-	int			fd;
-	int			screen_width;
-	int			screen_height;
-	int			p_flag;
-	int			x;
-}				t_a;
+	t_parcer		parcer;
+	t_map			map;
+	t_flag			flag;
+	t_data			data;
+	t_raycast		raycast;
+	t_player		player;
+	t_texture		texture;
+	t_texture_data	texture_data[5];
+	t_floor			floor;
+	t_move_flag		move_flag;
+	t_sprite		sprite;
+}				t_structures;
 
-int		parser(char **av);
+int				parser(char **av);
+void			my_pixel_put(t_structures *structures, int x, int y, int color);
+unsigned int	texture_color(t_structures *structures, int x, int y, int cardinal_point);
 
 
 
