@@ -6,7 +6,7 @@
 /*   By: mhumfrey <mhumfrey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:06:32 by mhumfrey          #+#    #+#             */
-/*   Updated: 2021/02/10 19:33:41 by mhumfrey         ###   ########.fr       */
+/*   Updated: 2021/02/13 22:51:44 by mhumfrey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,6 +103,7 @@ char	**read_map(t_a *a, char *line)
 		validate_line(line);
 		(line[0] != '\0') ? ft_lstadd_back(&head, ft_lstnew(line)) : free(line);
 	}
+	validate_line(line);
 	(line[0] != '\0') ? ft_lstadd_back(&head, ft_lstnew(line)) : free(line);
 	close(a->prc.fd);
 	a->prc.n_l = ft_lstsize(head);

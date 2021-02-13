@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mhumfrey <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: mhumfrey <mhumfrey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/11/03 13:38:23 by mhumfrey          #+#    #+#             */
-/*   Updated: 2020/11/09 19:30:45 by mhumfrey         ###   ########.fr       */
+/*   Updated: 2021/02/13 22:46:41 by mhumfrey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,8 @@ char		*ft_itoa(int n)
 	len = ft_intlen(m);
 	if (m == 0)
 	{
-		num = (char *)malloc(2 * sizeof(char));
+		if ((num = (char *)malloc(2 * sizeof(char))) == NULL)
+			return (0);
 		num[0] = '0';
 		num[1] = '\0';
 		return (num);

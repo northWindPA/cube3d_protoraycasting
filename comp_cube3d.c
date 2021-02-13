@@ -6,7 +6,7 @@
 /*   By: mhumfrey <mhumfrey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/01/24 21:32:37 by mhumfrey          #+#    #+#             */
-/*   Updated: 2021/02/12 19:18:13 by mhumfrey         ###   ########.fr       */
+/*   Updated: 2021/02/14 00:12:57 by mhumfrey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,8 @@ int		main(int ac, char **av)
 		return (error("Error\nNot enough arguments"));
 	if (ac > 3)
 		return (error("Error\nToo many arguments"));
+	if (!(ft_strncmp(av[1], "map.cub", 9) == 0))
+		return (error("Wrong file of the map!"));
 	read_lines(&a, av);
 	read_map(&a, a.prc.l);
 	validate_map(&a);

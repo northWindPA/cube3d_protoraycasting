@@ -6,7 +6,7 @@
 /*   By: mhumfrey <mhumfrey@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/02/09 17:17:02 by mhumfrey          #+#    #+#             */
-/*   Updated: 2021/02/10 22:08:28 by mhumfrey         ###   ########.fr       */
+/*   Updated: 2021/02/13 22:54:30 by mhumfrey         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@ void	floor_ceiling(t_a *a, int start, int end, int width)
 {
 	if (start == 0)
 		while (start < end)
-			my_pixel_put(a, width, start++, a->m.f);
+			my_pixel_put(a, width, start++, a->m.c);
 	else
 		while (start < end)
-			my_pixel_put(a, width, start++, a->m.c);
+			my_pixel_put(a, width, start++, a->m.f);
 }
 
 void	texture_wall(t_a *a, int num_p_l)
